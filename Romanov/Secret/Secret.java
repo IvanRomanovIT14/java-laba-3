@@ -7,180 +7,197 @@ public class Secret {
     private String secretText;
     private String keeperName;
     private int keeperNumber;
-    private Secret keeperNext;
-    private static int keepers = 0;
+    private Secret nextKeeper;
+    private Secret previousKeeper;
+    private static int totalKeepers = 0;
     private static Random random = new Random();
 
-    //Конструктор для создания нового секрета
-    public Secret() {
+    public Secret() { //Конструктор для создания нового секрета
         Scanner scanner = new Scanner(System.in);
-        // Ввод имени хранителя с проверкой на цифры и пустоту
-        String name = "";
-        while (name.trim().isEmpty() || containsDigits(name)) {
-            System.out.print("Введите имя хранителя секрета: ");
-            name = scanner.nextLine();
-            if (name.trim().isEmpty()) {
-                System.out.println("Имя не может быть пустым!");
-            } else if (containsDigits(name)) {
-                System.out.println("Имя не может содержать цифры!");
-            }
-        }
-        this.keeperName = name.trim();
-
-        //Ввод текста секрета с проверкой на пустоту
-        String text = "";
-        while (text.trim().isEmpty()) {
-            System.out.print("Введите текст секрета: ");
-            text = scanner.nextLine();
-            if (text.trim().isEmpty()) {
-                System.out.println("Текст секрета не может быть пустым!");
-            }
-        }
-        this.secretText = text.trim();
-        this.keeperNumber = ++keepers;
-        this.keeperNext = null;
-
+        this.keeperName = input(scanner, "имя хранителя секрета");
+        this.secretText = inputSecretText(scanner);
+        this.keeperNumber = ++totalKeepers;
+        this.nextKeeper = null;
+        this.previousKeeper = null;
         System.out.println("Создан новый секрет для: " + this.keeperName);
     }
 
-    // Конструктор для передачи секрета
-    public Secret(Secret originalSecret) {
+    //Конструктор для передачи секрета другому человеку
+    public Secret(Secret previousSecret) {
         Scanner scanner = new Scanner(System.in);
-        if (originalSecret == null) {
+        if (previousSecret == null) {
             throw new IllegalArgumentException("Исходный секрет не может быть null");
         }
-        if (originalSecret.keeperNext != null) {
-            throw new IllegalStateException("Секрет уже был передан другому человеку");
+        if (previousSecret.nextKeeper != null) {
+            throw new IllegalStateException("Секрет уже был передан другому человеку!");
         }
-        //Ввод имени нового хранителя с проверкой на цифры и пустоту
-        String newName = "";
-        while (newName.trim().isEmpty() || containsDigits(newName)) {
-            System.out.print("Введите имя нового хранителя секрета: ");
-            newName = scanner.nextLine();
-            if (newName.trim().isEmpty()) {
-                System.out.println("Ошибка: имя не может быть пустым!");
-            } else if (containsDigits(newName)) {
-                System.out.println("Ошибка: имя не может содержать цифры!");
+        this.keeperName = input(scanner, "имя нового хранителя секрета");
+        this.secretText = modifySecretText(previousSecret.secretText);
+        this.keeperNumber = ++totalKeepers;
+        this.nextKeeper = null;
+        this.previousKeeper = previousSecret;
+        previousSecret.nextKeeper = this; //Связываем предыдущего хранителя с текущим
+        System.out.println(previousSecret.keeperName + " сказал что " + previousSecret.secretText);
+    }
+
+    //Метод для ввода текста секрета с проверкой на пустоту
+    private String inputSecretText(Scanner scanner) {
+        while (true) {
+            System.out.println("Введите текст секрета:");
+            String text = scanner.nextLine();
+            if (text.trim().isEmpty()) {
+                System.out.println("Текст секрета не может быть пустым!");
+            } else {
+                return text.trim();
             }
         }
-        this.keeperName = newName.trim();
-        this.secretText = modifySecretText(originalSecret.secretText);
-        this.keeperNumber = ++keepers;
-        this.keeperNext = null;
-        originalSecret.keeperNext = this;
-        System.out.println(originalSecret.keeperName + " сказал что " + originalSecret.secretText);
     }
 
-    //Метод проверки на наличие цифр в строке
-    private boolean containsDigits(String str) {
-        for (char c : str.toCharArray()) {
-            if (Character.isDigit(c)) {
-                return true;
+    public static String input(Scanner scanner, String s) { //Метод для проверки на ввод
+        while (true) {
+            System.out.println("Введите " + s + ":");
+            String m = scanner.nextLine();
+            if (m.isEmpty()) {
+                return "";
+            }
+            if (Correct(m)) {
+                return m;
+            } else {
+                System.out.println("Можно вводить только буквы, - и пробелы !");
             }
         }
-        return false;
     }
 
-    public String getSecretText() { //Геттер для текста секрета
-        return secretText;
-    }
-
-    public String getkeeperName() { //Геттер для имени хранителя секрета
-        return keeperName;
-    }
-
-    public int getKeeperNumber() { //Геттер для номера хранителя секрета
-        return keeperNumber;
-    }
-
-    public Secret getNextKeeper() { //Геттер для ссылки на следующего хранителя секрета
-        return keeperNext;
-    }
-
-    public static int getKeepers() { //Геттер для общего количества хранителей секрета
-        return keepers;
-    }
-
-    public void setSecretText() { //Сеттер для ввода текста секрета
-        Scanner scanner = new Scanner(System.in);
-        String newText = "";
-        while (newText.trim().isEmpty()) {
-            System.out.print("Введите новый текст секрета: ");
-            newText = scanner.nextLine();
-            if (newText.trim().isEmpty()) {
-                System.out.println("Ошибка: текст секрета не может быть пустым!");
-            }
+    public static boolean Correct(String nsp) { //Вспомогательная проверка на ввод
+        if (nsp == null || nsp.isEmpty()) {
+            return true;
         }
-        this.secretText = newText.trim();
-        System.out.println("Текст секрета успешно изменен!");
+        return nsp.matches("^[a-zA-Zа-яА-ЯёЁ\\s-]+$");
     }
 
-    public void setkeeperName() { //Сеттер для ввода имени хранителя секрета
-        Scanner scanner = new Scanner(System.in);
-        String newName = "";
-        while (newName.trim().isEmpty() || containsDigits(newName)) {
-            System.out.print("Введите новое имя хранителя: ");
-            newName = scanner.nextLine();
-            if (newName.trim().isEmpty()) {
-                System.out.println("Ошибка: имя не может быть пустым!");
-            } else if (containsDigits(newName)) {
-                System.out.println("Ошибка: имя не может содержать цифры!");
-            }
+    //Метод для модификации текста секрета при передаче
+    private String modifySecretText(String originalText) {
+        if (originalText == null || originalText.isEmpty()) {
+            return originalText;
         }
-        this.keeperName = newName.trim();
-        System.out.println("Имя хранителя успешно изменено!");
-    }
-
-    //Метод для модификации текста
-    public String modifySecretText(String originalText) {
-        if (originalText == null || originalText.isEmpty()) return originalText;
         int textLength = originalText.length();
-        int maxChanges = Math.max(1, textLength / 10);
-        int numChanges = random.nextInt(maxChanges + 1);
+        int maxChanges = Math.max(1, textLength / 10); //N = 10% от размера текста
+        int numChanges = random.nextInt(maxChanges + 1); //X от 0 до N
         StringBuilder modifiedText = new StringBuilder(originalText);
+        //Добавляем гарантированно хотя бы 1 изменение, если maxChanges > 0
+        if (maxChanges > 0 && numChanges == 0) {
+            numChanges = 1;
+        }
         for (int i = 0; i < numChanges; i++) {
             int position = random.nextInt(modifiedText.length() + 1);
-            char randomChar = (char) (random.nextInt(26) + 'a');
+            char randomChar = (char) (random.nextInt(33) + 'а');
             modifiedText.insert(position, randomChar);
         }
         return modifiedText.toString();
     }
 
-    @Override
-    public String toString() {
-        return keeperName + ": это секрет!";
-    }
-
-    public int getNumberOfNextKeepers() {
-        int count = 0;
-        Secret current = this.keeperNext;
+    //Метод для получения количества следующих хранителей
+    public int getNextKeepers() {
+        int cnt = 0;
+        Secret current = this.nextKeeper;
         while (current != null) {
-            count++;
-            current = current.keeperNext;
+            cnt++;
+            current = current.nextKeeper;
         }
-        return count;
+        return cnt;
     }
 
-    public String getKeeperNameByIndex(int n) {
-        if (n == 0) return this.keeperName;
+    //Метод для получения имени N-го хранителя
+    public String getNameIndex(int n) {
+        if (n == 0) {
+            return this.keeperName;
+        }
         if (n > 0) {
-            Secret target = this;
-            for (int i = 0; i < n; i++) {
-                if (target.keeperNext == null) throw new IllegalArgumentException("Нет следующего хранителя");
-                target = target.keeperNext;
+            Secret s = this.nextKeeper;
+            for (int i = 1; i < n; i++) {
+                if (s == null) {
+                    throw new IllegalArgumentException("Нет " + n + "-го следующего хранителя");
+                }
+                s = s.nextKeeper;
             }
-            return target.keeperName;
+            if (s == null) {
+                throw new IllegalArgumentException("Нет " + n + "-го следующего хранителя");
+            }
+            return s.keeperName;
+        } else {
+            int absN = Math.abs(n);
+            Secret s = this.previousKeeper;
+            for (int i = 1; i < absN; i++) {
+                if (s == null) {
+                    throw new IllegalArgumentException("Нет " + absN + "-го предыдущего хранителя");
+                }
+                s = s.previousKeeper;
+            }
+            if (s == null) {
+                throw new IllegalArgumentException("Нет " + absN + "-го предыдущего хранителя");
+            }
+            return s.keeperName;
         }
-        throw new IllegalArgumentException("N должно быть положительным");
     }
 
+    //Метод для получения разницы в длине текста с N-ым хранителем
     public int getTextLengthDifference(int n) {
-        if (n <= 0) throw new IllegalArgumentException("N должно быть положительным");
-        Secret target = this;
-        for (int i = 0; i < n; i++) {
-            if (target.keeperNext == null) throw new IllegalArgumentException("Нет следующего хранителя");
-            target = target.keeperNext;
+        if (n == 0) {
+            return 0;
         }
-        return target.secretText.length() - this.secretText.length();
+        Secret s;
+        if (n > 0) {
+            //Сравнение с последующими хранителями - у них текст ДЛИННЕЕ
+            s = this.nextKeeper;
+            for (int i = 1; i < n; i++) {
+                if (s == null) {
+                    throw new IllegalArgumentException("Нет " + n + "-го следующего хранителя");
+                }
+                s = s.nextKeeper;
+            }
+        } else { //Сравнение с предыдущими хранителями - у них текст короче
+            int absN = Math.abs(n);
+            s = this.previousKeeper;
+            for (int i = 1; i < absN; i++) {
+                if (s == null) {
+                    throw new IllegalArgumentException("Нет " + absN + "-го предыдущего хранителя");
+                }
+                s = s.previousKeeper;
+            }
+        }
+        if (s == null) {
+            throw new IllegalArgumentException("Хранитель не найден");
+        }
+        return s.secretText.length() - this.secretText.length();
+    }
+
+    //Геттер для порядкового номера хранителя
+    public int getKeeperNumber() {
+        return keeperNumber;
+    }
+
+    //Геттер для имени хранителя
+    public String getKeeperName() {
+        return keeperName;
+    }
+
+    //Геттер для следующего хранителя
+    public Secret getNextKeeper() {
+        return nextKeeper;
+    }
+
+    //Геттер для предыдущего хранителя
+    public Secret getPreviousKeeper() {
+        return previousKeeper;
+    }
+
+    //Геттер для общего количества хранителей
+    public static int getTotalKeepers() {
+        return totalKeepers;
+    }
+
+    @Override
+    public String toString() { //Метод для текстового представления секрета
+        return keeperName + ": " + secretText;
     }
 }
