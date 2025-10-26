@@ -27,4 +27,12 @@ class RoboCat implements Meowable {
         res.append("!");
         System.out.println(res.toString());
     }
+
+    public String getName() { //Геттер для имени Робокота
+        return name;
+    }
+
+    public void setName(String name) { //Сеттер для имени Робокота
+        this.name = name;
+    }
 }
