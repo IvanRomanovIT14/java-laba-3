@@ -20,7 +20,6 @@ import static java.lang.Math.pow;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Выберите номер задания 1-8: ");
         Scanner scanner = new Scanner(System.in);
         if (args.length >= 2) {
             String x = args[0];
@@ -29,6 +28,7 @@ public class Main {
             System.out.printf("Результат возведения " + x + " в степень " + y + ": " + res);
             System.out.println();
         }
+        System.out.println("Выберите номер задания 1-8: ");
         if (scanner.hasNextInt()) {
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -61,28 +61,50 @@ public class Main {
                 case 3:
                     System.out.println("Создание первого секрета:");
                     Secret secret1 = new Secret();
+                    System.out.println("Строковое представление: " + secret1);
+                    System.out.println("Порядковый номер хранителя: " + secret1.getKeeperNumber());
+                    System.out.println("Хранителей после: " + secret1.getNextKeepers());
+                    System.out.println();
                     System.out.println("Передача секрета второму человеку:");
                     Secret secret2 = new Secret(secret1);
+                    System.out.println("Строковое представление: " + secret2);
+                    System.out.println("Порядковый номер хранителя: " + secret2.getKeeperNumber());
+                    System.out.println("Хранителей после: " + secret2.getNextKeepers());
                     System.out.println("Передача секрета третьему человеку:");
                     Secret secret3 = new Secret(secret2);
-                    System.out.println("Информация о секретах:");
-                    System.out.println("Секрет 1: " + secret1);
-                    System.out.println("Секрет 2: " + secret2);
-                    System.out.println("Секрет 3: " + secret3);
-                    System.out.println("Порядковый номер хранителя:");
-                    System.out.println(secret1.getkeeperName() + " был " + secret1.getKeeperNumber() + "-м по очереди");
-                    System.out.println(secret2.getkeeperName() + " был " + secret2.getKeeperNumber() + "-м по очереди");
-                    System.out.println(secret3.getkeeperName() + " был " + secret3.getKeeperNumber() + "-м по очереди");
-                    System.out.println("количество следующих хранителей:");
-                    System.out.println("После " + secret1.getkeeperName() + ": " + secret1.getNumberOfNextKeepers() + " человек");
-                    System.out.println("После " + secret2.getkeeperName() + ": " + secret2.getNumberOfNextKeepers() + " человек");
-                    System.out.println("После " + secret3.getkeeperName() + ": " + secret3.getNumberOfNextKeepers() + " человек");
+                    System.out.println("Строковое представление: " + secret3);
+                    System.out.println("Порядковый номер хранителя: " + secret3.getKeeperNumber());
+                    System.out.println("Хранителей после: " + secret3.getNextKeepers());
+                    System.out.println();
+                    System.out.println("Информация о цепочке секретов:");
+                    System.out.println("Общее количество хранителей: " + Secret.getTotalKeepers());
+                    System.out.println();
                     System.out.println("Поиск хранителей по индексу:");
                     try {
-                        System.out.println("1-й следующий после " + secret1.getkeeperName() + ": " + secret1.getKeeperNameByIndex(1));
-                        System.out.println("2-й следующий после " + secret1.getkeeperName() + ": " + secret1.getKeeperNameByIndex(2));
+                        System.out.println("0-й хранитель от 1-го секрета: " + secret1.getNameIndex(0));
+                        System.out.println("1-й следующий после 1-го секрета: " + secret1.getNameIndex(1));
+                        System.out.println("2-й следующий после 1-го секрета: " + secret1.getNameIndex(2));
+                        System.out.println("1-й предыдущий до 3-го секрета: " + secret3.getNameIndex(-1));
+                        System.out.println("2-й предыдущий до 3-го секрета: " + secret3.getNameIndex(-2));
+                        System.out.println();
                     } catch (IllegalArgumentException e) {
                         System.out.println("Ошибка: " + e.getMessage());
+                    }
+                    System.out.println("Разница в длине текста секрета:");
+                    try {
+                        System.out.println("Разница с 1-м следующим: " + secret1.getTextLengthDifference(1) + " символов");
+                        System.out.println("Разница с 2-м следующим: " + secret1.getTextLengthDifference(2) + " символов");
+                        System.out.println("Разница с 1-м предыдущим: " + secret3.getTextLengthDifference(-1) + " символов");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Ошибка: " + e.getMessage());
+                    }
+                    System.out.println();
+                    System.out.println("Попытка повторной передачи секрета:");
+                    try {
+                        Secret secret4 = new Secret(secret2);
+                        System.out.println("Ошибка: секрет был передан повторно!");
+                    } catch (IllegalStateException e) {
+                        System.out.println("Успешно предотвращено!");
                     }
                     break;
                 case 4:
@@ -115,7 +137,8 @@ public class Main {
                     Bird cockoo = new Cockoo();
                     cockoo.sing();
                     Bird parrot = new Parrot();
-                    System.out.println(parrot.toString());
+                    System.out.println(parrot);
+                    parrot.sing();
                     break;
                 case 6:
                     MeowManager manager = new MeowManager();
