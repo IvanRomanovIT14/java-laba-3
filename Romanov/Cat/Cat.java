@@ -27,4 +27,12 @@ class Cat implements Meowable {
         res.append("!");
         System.out.println(res.toString());
     }
+
+    public String getName() { //Геттер для имени кота
+        return name;
+    }
+
+    public void setName(String name) { //Сеттер для имени Кота
+        this.name = name;
+    }
 }
