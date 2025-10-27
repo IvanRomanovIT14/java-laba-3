@@ -34,18 +34,32 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    String name1 = First.input(scanner, "личное имя");
-                    First human1 = new First(name1);
-                    System.out.println("Имя (только личное имя): " + human1);
-                    String name2 = First.input(scanner, "личное имя");
-                    String surname2 = First.input(scanner, "фамилию");
-                    First human2 = new First(name2, surname2);
-                    System.out.println("Имя (личное имя и фамилия): " + human2);
-                    String name3 = First.input(scanner, "личное имя");
-                    String surname3 = First.input(scanner, "фамилию");
-                    String patronymic3 = First.input(scanner, "отчество");
-                    First human3 = new First(name3, surname3, patronymic3);
-                    System.out.println("Имя (личное имя, фамилия и отчество): " + human3);
+                    try {
+                        String name1 = First.input(scanner, "личное имя");
+                        First human1 = new First(name1);
+                        System.out.println("Имя (только личное имя): " + human1);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Ошибка создания человека: " + e.getMessage());
+                    }
+
+                    try {
+                        String name2 = First.input(scanner, "личное имя");
+                        String surname2 = First.input(scanner, "фамилию");
+                        First human2 = new First(name2, surname2);
+                        System.out.println("Имя (личное имя и фамилия): " + human2);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Ошибка создания человека: " + e.getMessage());
+                    }
+
+                    try {
+                        String name3 = First.input(scanner, "личное имя");
+                        String surname3 = First.input(scanner, "фамилию");
+                        String patronymic3 = First.input(scanner, "отчество");
+                        First human3 = new First(name3, surname3, patronymic3);
+                        System.out.println("Имя (личное имя, фамилия и отчество): " + human3);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Ошибка создания человека: " + e.getMessage());
+                    }
                     break;
                 case 2:
                     System.out.println("Создание человека с именем Лев и ростом 170:");
