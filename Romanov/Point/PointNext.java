@@ -19,9 +19,12 @@ public class PointNext extends PointTwo {
     @Override
     //Метод проверяет равенство координат и цвета
     public boolean equals(Object obj) {
-        if (!super.equals(obj)) return false;
-        if (obj == null || getClass() != obj.getClass())
+        if (!super.equals(obj)) { //Если координаты не совпадают, то точки не равны
             return false;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         PointNext other = (PointNext) obj;
         return color.equals(other.color);
     }
