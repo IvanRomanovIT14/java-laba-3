@@ -8,29 +8,30 @@ public class First {
     private String patronymic;
 
     public First(String name) { //Конструктор только с именем
-        this.name = correctName(name, "Личное имя");
+        this.name = validateNotEmpty(name, "Личное имя");
         this.surname = null;
         this.patronymic = null;
     }
 
     public First(String name, String surname) { //Конструктор с именем и фамилией
-        this.name = correctName(name, "Личное имя");
-        this.surname = correctName(surname, "Фамилия");
+        this.name = validateNotEmpty(name, "Личное имя");
+        this.surname = validateNotEmpty(surname, "Фамилия");
         this.patronymic = null;
     }
 
     //Конструктор с именем, фамилией и отчеством
     public First(String name, String surname, String patronymic) {
-        this.name = correctName(name, "Личное имя");
-        this.surname = correctName(surname, "Фамилия");
-        this.patronymic = correctName(patronymic, "Отчество");
+        this.name = validateNotEmpty(name, "Личное имя");
+        this.surname = validateNotEmpty(surname, "Фамилия");
+        this.patronymic = validateNotEmpty(patronymic, "Отчество");
     }
 
-    private String correctName(String name, String s) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException(s + " не может быть пустым");
+    //Метод для проверки на null и пустоту
+    private String validateNotEmpty(String value, String s) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(s + " не может быть null или пустым");
         }
-        return name.trim();
+        return value.trim();
     }
 
     public String getName() { //Геттер для имени
