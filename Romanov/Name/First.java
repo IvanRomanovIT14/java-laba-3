@@ -3,7 +3,7 @@ package ru.Romanov.Name;
 import java.util.Scanner;
 
 public class First {
-    private String name;
+    private final String name;
     private String surname;
     private String patronymic;
 
@@ -26,9 +26,9 @@ public class First {
         this.patronymic = correctName(patronymic, "Отчество");
     }
 
-    private String correctName(String name, String fieldName) {
+    private String correctName(String name, String s) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException(fieldName + " не может быть пустым");
+            throw new IllegalArgumentException(s + " не может быть пустым");
         }
         return name.trim();
     }
@@ -43,10 +43,6 @@ public class First {
 
     public String getPatronymic() { //Геттер для отчества
         return patronymic;
-    }
-
-    public void setName(String name) { //Сеттер для имени
-        this.name = name;
     }
 
     public void setSurname(String surname) { //Сеттер для фамилии
