@@ -42,7 +42,6 @@ Point - расширенная работа с точками (Задания 7-
 - `getName()` - возвращает имя
 - `getSurname()` - возвращает фамилию
 - `getPatronymic()` - возвращает отчество
-- `setName(String name)` - устанавливает имя
 - `setSurname(String surname)` - устанавливает фамилию
 - `setPatronymic(String patronymic)` - устанавливает отчество
 
