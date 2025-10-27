@@ -89,6 +89,7 @@ public class Secret {
             n = 1;
         }
         for (int i = 0; i < n; i++) {
+            //Выбор случайной позиции для вставки
             int position = random.nextInt(modifiedText.length() + 1);
             char randomChar = (char) (random.nextInt(33) + 'а');
             modifiedText.insert(position, randomChar);
@@ -99,7 +100,7 @@ public class Secret {
     //Метод для получения количества следующих хранителей
     public int getNextKeepers() {
         int cnt = 0;
-        Secret current = this.nextKeeper;
+        Secret current = this.nextKeeper; //Начинаем со следующего хранителя
         while (current != null) {
             cnt++;
             current = current.nextKeeper;
@@ -125,7 +126,7 @@ public class Secret {
             }
             return s.keeperName;
         } else {
-            int absN = Math.abs(n);
+            int absN = Math.abs(n); //Поиск предыдущих хранителей отрицательные N
             Secret s = this.previousKeeper;
             for (int i = 1; i < absN; i++) {
                 if (s == null) {
