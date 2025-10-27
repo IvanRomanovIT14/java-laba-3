@@ -52,9 +52,10 @@ public class PointTwo {
 
     //Метод определяет чтобы 2 точки были равны, чтобы X и Y у них совпадали
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj) { //Проверка что сравнивается один и тот же объект
             return true;
         }
+        //Проверка что переданный объект не null и того же класса
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
