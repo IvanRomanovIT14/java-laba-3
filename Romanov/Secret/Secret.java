@@ -81,14 +81,14 @@ public class Secret {
             return originalText;
         }
         int textLength = originalText.length();
-        int maxChanges = Math.max(1, textLength / 10); //N = 10% от размера текста
-        int numChanges = random.nextInt(maxChanges + 1); //X от 0 до N
+        int maxChanges = Math.max(1, textLength / 10);
+        int n = random.nextInt(maxChanges + 1); //x от 0 до n
         StringBuilder modifiedText = new StringBuilder(originalText);
         //Добавляем гарантированно хотя бы 1 изменение, если maxChanges > 0
-        if (maxChanges > 0 && numChanges == 0) {
-            numChanges = 1;
+        if (maxChanges > 0 && n == 0) {
+            n = 1;
         }
-        for (int i = 0; i < numChanges; i++) {
+        for (int i = 0; i < n; i++) {
             int position = random.nextInt(modifiedText.length() + 1);
             char randomChar = (char) (random.nextInt(33) + 'а');
             modifiedText.insert(position, randomChar);
