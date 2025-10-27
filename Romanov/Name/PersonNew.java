@@ -57,14 +57,14 @@ public class PersonNew {
         this.patronymic = correctName(actualPatronymic, "Отчество");
     }
 
-    private String correctName(String name, String surname) {
+    private String correctName(String name, String surname) { //Проверка на пустоту
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException(surname + " не может быть пустым");
         }
         return name.trim();
     }
 
-    private int correctHeight(int height) {
+    private int correctHeight(int height) { //Проверка на ограничение по росту
         if (height <= 0 || height > 500) {
             throw new IllegalArgumentException("Рост должен быть положительным и не более 500 см");
         }
